@@ -22,8 +22,10 @@
     font-family:Inter, sans-serif;
     background:var(--bg);
     color:var(--text);
+    padding-top:5px; /* FIXES OVERLAP */
   }
 
+  /* HEADER / NAV SECTION */
   header{
     position:sticky;
     top:0;
@@ -31,6 +33,7 @@
     background:rgba(0,0,0,0.35);
     padding:12px 16px;
     z-index:20;
+    margin-bottom:20px; /* SPACE FIX */
   }
 
   .title{
@@ -127,6 +130,7 @@
   .table-wrap{
     overflow-x:auto;
     padding:0 12px;
+    margin-top:25px; /* ENSURE NOT UNDER HEADER */
   }
 
   table{
@@ -154,13 +158,10 @@
     font-weight:600;
   }
 
-  /* MOBILE CARD STYLE ROWS */
+  /* MOBILE CARD MODE */
   @media(max-width:600px){
     thead{display:none;}
-    table,tbody,tr,td{
-      display:block;
-      width:100%;
-    }
+    table,tbody,tr,td{display:block;width:100%;}
     tr{
       margin-bottom:12px;
       background:var(--card);
@@ -248,7 +249,6 @@
 </table>
 </div>
 <script>
-
 const API_BASE = "https://script.google.com/macros/s/AKfycby30Tw10MQlbxrDhguutgGTJPtHzq_-_eveQD0rKwc-Dr2jEktG039_UsQBh1yGy-Co1Q/exec";
 
 const $ = s => document.querySelector(s);
@@ -266,31 +266,48 @@ const els = {
   rangeTxt: $('#rangeTxt')
 };
 
+
+/*****************************************************
+ * FETCH FILTERED DATA (JSON API)
+ *****************************************************/
 async function fetchData(params = {}) {
+
   const url = new URL(API_BASE);
   url.searchParams.set("route", "getData");
 
-  Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
+  Object.keys(params).forEach(k => {
+    if (params[k] !== "") url.searchParams.set(k, params[k]);
+  });
 
-  els.tbody.innerHTML = `<tr><td data-label='Loading' colspan='6'>Loading…</td></tr>`;
+  els.tbody.innerHTML = `<tr><td data-label="Loading" colspan="6">Loading…</td></tr>`;
 
-  const res = await fetch(url);
-  const json = await res.json();
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
 
-  if (!json.ok) {
-    els.tbody.innerHTML = `<tr><td colspan='6'>${json.error}</td></tr>`;
-    return;
+    if (!json.ok) {
+      els.tbody.innerHTML = `<tr><td colspan="6">${json.error}</td></tr>`;
+      return;
+    }
+
+    render(json.data);
+    summary(json.data, json.meta);
+    populate(json.meta);
+
+  } catch (err) {
+    els.tbody.innerHTML = `<tr><td colspan="6">Error loading</td></tr>`;
   }
-
-  render(json.data);
-  populate(json.meta);
-  summary(json.data, json.meta);
 }
 
+
+
+/*****************************************************
+ * POPULATE FILTER DROPDOWNS
+ *****************************************************/
 function populate(meta) {
   const fill = (el, list) => {
-    el.innerHTML = `<option value=''>All</option>` + 
-                   list.map(x => `<option>${x}</option>`).join('');
+    el.innerHTML = `<option value="">All</option>` +
+      list.map(v => `<option>${v}</option>`).join('');
   };
 
   fill(els.party, meta.parties || []);
@@ -298,43 +315,63 @@ function populate(meta) {
   fill(els.mill, meta.mills || []);
 }
 
-function render(rows) {
 
+
+/*****************************************************
+ * RENDER TABLE (Responsive)
+ *****************************************************/
+function render(rows) {
   if (!rows.length) {
-    els.tbody.innerHTML = `<tr><td colspan='6'>No data</td></tr>`;
+    els.tbody.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
     return;
   }
 
   els.tbody.innerHTML = rows.map(r => `
     <tr>
-      <td data-label='Date'>${r.date}</td>
-      <td data-label='Challan'>${r.challan}</td>
-      <td data-label='Party'>${r.party}</td>
-      <td data-label='Yarn'>${r.yarn}</td>
-      <td class='qty' data-label='Qty'>${Number(r.qty).toLocaleString()}</td>
-      <td data-label='Mill'>${r.mill}</td>
+      <td data-label="Date">${r.date}</td>
+      <td data-label="Challan">${r.challan}</td>
+      <td data-label="Party">${r.party}</td>
+      <td data-label="Yarn">${r.yarn}</td>
+      <td class="qty" data-label="Qty">${Number(r.qty).toLocaleString()}</td>
+      <td data-label="Mill">${r.mill}</td>
     </tr>
   `).join('');
 }
 
+
+
+/*****************************************************
+ * SUMMARY SECTION
+ *****************************************************/
 function summary(rows, meta) {
-  els.total.textContent = rows.reduce((a, b) => a + Number(b.qty), 0).toLocaleString();
+  const qty = rows.reduce((a, b) => a + Number(b.qty || 0), 0);
+
+  els.total.textContent = qty.toLocaleString();
   els.rows.textContent = rows.length;
   els.rangeTxt.textContent = `${meta.range.from} → ${meta.range.to}`;
 }
 
-function applyFilters() {
-  const chip = document.querySelector('.chip.active').dataset.range;
-  const p = {};
 
+
+/*****************************************************
+ * APPLY FILTERS
+ *****************************************************/
+function applyFilters() {
+
+  const chip = document.querySelector('.chip.active').dataset.range;
+
+  const p = {};
   const now = new Date();
   const iso = d => d.toISOString().slice(0, 10);
 
-  if (chip === 'today') p.dateFrom = p.dateTo = iso(now);
+  /* QUICK RANGES */
+  if (chip === "today") {
+    p.dateFrom = p.dateTo = iso(now);
+  }
 
-  else if (chip === 'last3') p.lastDays = 3;
+  if (chip === "last3") p.lastDays = 3;
 
-  else if (chip === 'week') {
+  if (chip === "week") {
     let d = new Date();
     let day = d.getDay();
     if (day === 0) day = 7;
@@ -346,16 +383,18 @@ function applyFilters() {
     p.dateTo = iso(e);
   }
 
-  else if (chip === 'month') {
+  if (chip === "month") {
     const s = new Date(now.getFullYear(), now.getMonth(), 1);
     const e = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     p.dateFrom = iso(s);
     p.dateTo = iso(e);
   }
 
+  /* CUSTOM DATE OVERRIDE */
   if (els.from.value) p.dateFrom = els.from.value;
   if (els.to.value) p.dateTo = els.to.value;
 
+  /* OTHER FILTERS */
   if (els.party.value) p.party = els.party.value;
   if (els.yarn.value) p.yarn = els.yarn.value;
   if (els.mill.value) p.mill = els.mill.value;
@@ -364,23 +403,26 @@ function applyFilters() {
   fetchData(p);
 }
 
-/* EVENT LISTENERS */
 
-document.getElementById('quick').addEventListener('click', e => {
-  const t = e.target.closest('.chip');
+
+/*****************************************************
+ * EVENTS
+ *****************************************************/
+document.getElementById("quick").addEventListener("click", e => {
+  const t = e.target.closest(".chip");
   if (!t) return;
 
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  t.classList.add('active');
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  t.classList.add("active");
 
   applyFilters();
 });
 
-document.getElementById('apply').addEventListener('click', applyFilters);
+document.getElementById("apply").addEventListener("click", applyFilters);
 
-document.getElementById('reset').addEventListener('click', () => {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  document.querySelector('.chip[data-range="last3"]').classList.add('active');
+document.getElementById("reset").addEventListener("click", () => {
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  document.querySelector('.chip[data-range="last3"]').classList.add("active");
 
   els.party.value = "";
   els.yarn.value = "";
@@ -392,14 +434,17 @@ document.getElementById('reset').addEventListener('click', () => {
   fetchData({ lastDays: 3 });
 });
 
-window.addEventListener('DOMContentLoaded', () => {
+
+/*****************************************************
+ * LOAD DEFAULT (last 3 days)
+ *****************************************************/
+window.addEventListener("DOMContentLoaded", () => {
   fetchData({ lastDays: 3 });
 });
-
 </script>
-<!-- OPTIONAL: PDF EXPORT BUTTON (UI ONLY — functionality next step) -->
+<!-- PDF Export Button -->
 <div style="padding:18px;">
-  <button id="pdfExport" 
+  <button id="pdfExport"
     style="
       width:100%;
       padding:14px;
@@ -416,11 +461,56 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <script>
-// Hook for PDF button (functionality will be added if you want)
 document.getElementById("pdfExport").addEventListener("click", () => {
-  alert("PDF export coming next — backend setup required.");
+
+  const chip = document.querySelector('.chip.active').dataset.range;
+
+  let params = new URLSearchParams();
+
+  // push filter values into URL
+  if (els.party.value) params.set("party", els.party.value);
+  if (els.yarn.value) params.set("yarn", els.yarn.value);
+  if (els.mill.value) params.set("mill", els.mill.value);
+  if (els.challan.value) params.set("challan", els.challan.value);
+
+  if (els.from.value) params.set("dateFrom", els.from.value);
+  if (els.to.value) params.set("dateTo", els.to.value);
+
+  // quick filters
+  if (chip === "last3") params.set("lastDays", 3);
+
+  if (chip === "today") {
+    let t = new Date().toISOString().slice(0,10);
+    params.set("dateFrom", t);
+    params.set("dateTo", t);
+  }
+
+  if (chip === "week") {
+    let now = new Date(); 
+    let day = now.getDay();
+    if (day === 0) day = 7;
+    const s = new Date(now);
+    s.setDate(s.getDate() - day + 1);
+    const e = new Date(s);
+    e.setDate(e.getDate() + 6);
+    params.set("dateFrom", s.toISOString().slice(0,10));
+    params.set("dateTo", e.toISOString().slice(0,10));
+  }
+
+  if (chip === "month") {
+    let now = new Date();
+    const s = new Date(now.getFullYear(), now.getMonth(), 1);
+    const e = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    params.set("dateFrom", s.toISOString().slice(0,10));
+    params.set("dateTo", e.toISOString().slice(0,10));
+  }
+
+  // Generate export URL
+  const pdfURL = API_BASE + "?route=exportPDF&" + params.toString();
+
+  // Open PDF
+  window.open(pdfURL, "_blank");
 });
 </script>
-
 </body>
 </html>
