@@ -1,3 +1,4 @@
+<!-- Instagram-style mobile-optimized outgoing viewer -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -15,12 +16,9 @@
     --muted: #98a2b3;
     --ring: rgba(255,255,255,0.25);
     --glass: rgba(255,255,255,0.08);
-    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    --shadow: 0 6px 24px rgba(0,0,0,0.35);
     --accent: #62d0ff;
     --accent-2: #9b8cff;
-    --ok: #34d399;
-    --warn: #f59e0b;
-    --danger: #ef4444;
   }
   .light{
     --bg: #f6f7fb;
@@ -29,389 +27,221 @@
     --muted: #556070;
     --ring: rgba(0,0,0,0.08);
     --glass: rgba(255,255,255,0.9);
-    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --shadow: 0 6px 20px rgba(0,0,0,0.08);
     --accent: #0066ff;
     --accent-2: #8a5cff;
   }
-  *{ box-sizing:border-box }
-  html,body{ height:100% }
+
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent }
   body{
-    margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    background: radial-gradient(1200px 800px at 80% -10%, rgba(98,208,255,0.12), transparent 40%),
-                radial-gradient(900px 600px at -10% 20%, rgba(155,140,255,0.12), transparent 40%),
-                var(--bg);
+    margin:0; font-family: Inter, sans-serif;
+    background: var(--bg);
     color: var(--text);
-    transition: background 400ms ease, color 300ms ease;
+    padding-bottom: 120px; /* space for mobile */
   }
-  .wrap{ max-width:1200px; margin:0 auto; padding:24px; }
+
   header{
-    position: sticky; top:0; z-index:10; backdrop-filter: blur(10px);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
-    padding-bottom: 10px;
+    position: sticky; top:0; z-index:20;
+    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.35);
+    padding: 14px 16px;
   }
-  .title{
-    display:flex; align-items:center; gap:10px; margin:10px 0 16px 0;
+
+  .title{ display:flex; align-items:center; gap:10px; }
+  .badge{ padding:4px 10px; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); font-size:12px; }
+
+  /* MOBILE-FIRST filters */
+  .filters{
+    margin-top: 12px;
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding-bottom:6px;
   }
-  .badge{ font-size:12px; padding:4px 8px; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:white; }
-  .bar{
-    display:grid; gap:10px;
-    grid-template-columns: repeat(4, minmax(0,1fr));
-  }
-  .card{
-    background: var(--glass);
-    border: 1px solid var(--ring);
-    border-radius: 18px; padding: 12px 12px;
-    box-shadow: var(--shadow);
-  }
-  .chips{ display:flex; gap:8px; flex-wrap:wrap }
   .chip{
-    padding:8px 12px; border-radius: 999px; cursor:pointer; user-select:none;
-    border:1px solid var(--ring); background:var(--card);
-    transition: transform .08s ease, background 200ms ease, border 200ms ease;
+    padding:8px 14px; white-space:nowrap;
+    border-radius:999px; background:var(--card);
+    border:1px solid var(--ring);
   }
-  .chip:hover{ transform: translateY(-1px) }
-  .chip.active{ outline: 2px solid var(--accent); background: linear-gradient(180deg, rgba(98,208,255,0.15), transparent) }
-  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
-  select,input[type="date"],input[type="text"]{
-    width:100%; padding:10px 12px; background:var(--card); color:var(--text);
-    border:1px solid var(--ring); border-radius:12px; outline:none;
+  .chip.active{ outline:2px solid var(--accent) }
+
+  /* Filter Panel */
+  .panel{
+    margin-top:10px;
+    background:var(--glass);
+    padding:12px;
+    border-radius:16px;
+    border:1px solid var(--ring);
   }
-  .grid{ display:grid; gap:10px; grid-template-columns: repeat(6, minmax(0,1fr)) }
-  .grid > .span-2{ grid-column: span 2 }
-  .grid > .span-3{ grid-column: span 3 }
-  .grid > .span-6{ grid-column: span 6 }
-  .right{ margin-left:auto }
-  .toggle{
-    padding:8px 12px; border-radius:12px; border:1px solid var(--ring); background:var(--card); cursor:pointer;
+
+  .panel label{ font-size:12px; color:var(--muted) }
+  .panel input, .panel select{
+    width:100%; padding:10px; margin-top:4px;
+    border-radius:12px; background:var(--card);
+    border:1px solid var(--ring);
+    color:var(--text);
   }
-  table{ width:100%; border-collapse: collapse; margin-top:10px }
-  thead th{
-    font-weight:600; text-align:left; padding:12px; border-bottom:1px solid var(--ring); position:sticky; top:84px; background:var(--bg);
+
+  /* TABLE Instagram Style */
+  table{ width:100%; border-collapse:separate; border-spacing:0 8px; }
+  tbody tr{ background:var(--card); border-radius:16px; }
+  tbody td{
+    padding:14px 16px;
+    font-size:17px;
+    border-bottom:none;
   }
-  tbody td{ padding:10px 12px; border-bottom:1px dashed var(--ring) }
-  .qty{ font-variant-numeric: tabular-nums; text-align:right }
-  .muted{ color: var(--muted) }
-  .sumcard{ display:flex; gap:16px; align-items:center; }
-  .sumcard .big{ font-weight:800; font-size: 28px }
-  .fade-in{ animation: fadein .35s ease }
-  @keyframes fadein{ from{opacity:0; transform: translateY(6px)} to{opacity:1; transform:none}}
-  .footer{ color:var(--muted); font-size:12px; margin:20px 0 60px }
+  .qty{ text-align:right; font-weight:600 }
+
+  /* MOBILE OPTIMIZED ROW SPACING (BIG TOUCH TARGETS) */
+  tbody tr{ display:block; margin-bottom:12px; padding:12px 10px; border-radius:16px; }
+  tbody td{ display:flex; justify-content:space-between; padding:6px 4px; }
+  tbody td::before{
+    content: attr(data-label);
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* Desktop Table Revert */
+  @media (min-width: 760px){
+    tbody tr{ display:table-row; padding:0; }
+    tbody td{ display:table-cell; padding:14px 16px; }
+    tbody td::before{ display:none }
+  }
+
+  #summary{
+    margin:18px;
+    padding:16px;
+    background:var(--glass);
+    border-radius:16px;
+    border:1px solid var(--ring);
+  }
+
 </style>
 </head>
 <body>
-<header class="wrap">
+<header>
   <div class="title">
     <div class="badge">Outgoing</div>
-    <h1 style="margin:0; font-size:24px; font-weight:800;">RK KNIT FAB – Outgoing View</h1>
-    <div class="right">
-      <button id="themeToggle" class="toggle" title="Toggle theme">🌙 / ☀️</button>
-    </div>
+    <h2 style="margin:0">RK KNIT FAB</h2>
+    <button id="themeToggle" style="margin-left:auto; background:var(--card); border:1px solid var(--ring); padding:8px 12px; border-radius:10px;">🌙</button>
   </div>
 
-  <div class="card">
-    <div class="chips" id="quick">
-      <div class="chip" data-range="today">Today</div>
-      <div class="chip active" data-range="last3">Last 3 days</div>
-      <div class="chip" data-range="week">This Week</div>
-      <div class="chip" data-range="month">This Month</div>
-      <div class="chip" data-range="all">All</div>
-    </div>
+  <div class="filters" id="quick">
+    <div class="chip" data-range="today">Today</div>
+    <div class="chip active" data-range="last3">Last 3 days</div>
+    <div class="chip" data-range="week">This Week</div>
+    <div class="chip" data-range="month">This Month</div>
+    <div class="chip" data-range="all">All</div>
+  </div>
 
-    <div class="grid" style="margin-top:10px">
-      <div class="span-2">
-        <label class="muted">Party</label>
-        <select id="party"><option value="">All</option></select>
-      </div>
-      <div class="span-2">
-        <label class="muted">Yarn</label>
-        <select id="yarn"><option value="">All</option></select>
-      </div>
-      <div class="span-2">
-        <label class="muted">Mill</label>
-        <select id="mill"><option value="">All</option></select>
-      </div>
+  <div class="panel">
+    <label>Party</label>
+    <select id="party"><option value="">All</option></select>
 
-      <div>
-        <label class="muted">Challan No.</label>
-        <input id="challan" type="text" placeholder="Search challan..." />
-      </div>
-      <div>
-        <label class="muted">From</label>
-        <input id="from" type="date" />
-      </div>
-      <div>
-        <label class="muted">To</label>
-        <input id="to" type="date" />
-      </div>
+    <label>Yarn</label>
+    <select id="yarn"><option value="">All</option></select>
 
-      <div class="span-2">
-        <label class="muted">Group by</label>
-        <select id="groupBy">
-          <option value="none">None</option>
-          <option value="date">Date (daily)</option>
-          <option value="week">Week</option>
-          <option value="month">Month</option>
-        </select>
-      </div>
+    <label>Mill</label>
+    <select id="mill"><option value="">All</option></select>
 
-      <div class="span-3 row" style="align-items:flex-end; justify-content:flex-end">
-        <button id="reset" class="toggle">Reset</button>
-        <button id="apply" class="toggle" style="border-color: var(--accent)">Apply Filters</button>
-      </div>
-    </div>
+    <label>Challan</label>
+    <input id="challan" placeholder="Enter challan no…" />
+
+    <label>Date From</label>
+    <input type="date" id="from" />
+
+    <label>Date To</label>
+    <input type="date" id="to" />
+
+    <button id="apply" style="margin-top:10px; width:100%; padding:12px; border-radius:12px; background:var(--accent); color:white; border:none;">Apply Filters</button>
+    <button id="reset" style="margin-top:8px; width:100%; padding:12px; border-radius:12px; background:var(--card); border:1px solid var(--ring); color:var(--text);">Reset</button>
   </div>
 </header>
 
-<main class="wrap">
-  <div class="card sumcard fade-in" id="summary">
-    <div>
-      <div class="muted">Total Quantity (kgs)</div>
-      <div class="big" id="total">0</div>
-    </div>
-    <div style="margin-left:16px">
-      <div class="muted">Rows</div>
-      <div class="big" id="rows">0</div>
-    </div>
-    <div class="muted" id="rangeTxt" style="margin-left:auto"></div>
-  </div>
+<div id="summary">
+  <div><strong>Total Qty:</strong> <span id="total">0</span> kg</div>
+  <div><strong>Rows:</strong> <span id="rows">0</span></div>
+  <div id="rangeTxt" style="font-size:12px; color:var(--muted); margin-top:6px"></div>
+</div>
 
-  <div class="card fade-in" id="tableWrap">
-    <table id="tbl">
-      <thead>
-        <tr>
-          <th>DATE</th>
-          <th>CHALLAN NO.</th>
-          <th>PARTIES</th>
-          <th>YARNS</th>
-          <th class="qty">QUANTITY (KGS)</th>
-          <th>MILLS</th>
-        </tr>
-      </thead>
-      <tbody id="tbody">
-        <tr><td class="muted" colspan="6">Loading…</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="footer">Tip: Filters combine (e.g., Party + Yarn + Date). “Group by” will summarize quantity per group.</div>
-</main>
+<table>
+  <tbody id="tbody">
+    <tr><td data-label="Loading">Loading…</td></tr>
+  </tbody>
+</table>
 
 <script>
-  // ------- CONFIG -------
-  const API_BASE = 'https://script.google.com/macros/s/AKfycby30Tw10MQlbxrDhguutgGTJPtHzq_-_eveQD0rKwc-Dr2jEktG039_UsQBh1yGy-Co1Q/exec';
+const API_BASE = "https://script.google.com/macros/s/AKfycby30Tw10MQlbxrDhguutgGTJPtHzq_-_eveQD0rKwc-Dr2jEktG039_UsQBh1yGy-Co1Q/exec";
 
-  // ------- THEME -------
-  const themeToggle = document.getElementById('themeToggle');
-  function setTheme(mode){
-    if(mode === 'light'){ document.body.classList.add('light'); }
-    else { document.body.classList.remove('light'); }
-    localStorage.setItem('rk_theme', mode);
+const $ = sel => document.querySelector(sel);
+const els = {
+  party: $('#party'), yarn: $('#yarn'), mill: $('#mill'), challan: $('#challan'), from: $('#from'), to: $('#to'),
+  tbody: $('#tbody'), total: $('#total'), rows: $('#rows'), rangeTxt: $('#rangeTxt')
+};
+
+async function fetchData(params={}){
+  const url = new URL(API_BASE);
+  url.searchParams.set('route','getData');
+  for(const k in params) url.searchParams.set(k, params[k]);
+
+  els.tbody.innerHTML = `<tr><td data-label="Status">Loading…</td></tr>`;
+
+  const res = await fetch(url);
+  const j = await res.json();
+  if(!j.ok){ els.tbody.innerHTML = `<tr><td data-label="Error">${j.error}</td></tr>`; return; }
+
+  render(j.data);
+  showSummary(j.data, j.meta);
+  populateFilters(j.meta);
+}
+
+function populateFilters(meta){
+  const fill = (el,list)=>{ el.innerHTML = `<option value="">All</option>` + list.map(x => `<option>${x}</option>`).join(''); };
+  fill(els.party, meta.parties||[]);
+  fill(els.yarn, meta.yarns||[]);
+  fill(els.mill, meta.mills||[]);
+}
+
+function render(rows){
+  if(rows.length===0){ els.tbody.innerHTML = `<tr><td data-label="Status">No data</td></tr>`; return; }
+
+  els.tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td data-label="DATE">${r.date}</td>
+      <td data-label="CHALLAN">${r.challan}</td>
+      <td data-label="PARTY">${r.party}</td>
+      <td data-label="YARN">${r.yarn}</td>
+      <td data-label="QTY" class="qty">${Number(r.qty).toLocaleString()}</td>
+      <td data-label="MILL">${r.mill}</td>
+    </tr>`).join('');
+}
+
+function showSummary(rows, meta){
+  els.total.textContent = rows.reduce((a,b)=> a+Number(b.qty||0),0).toLocaleString();
+  els.rows.textContent = rows.length;
+  els.rangeTxt.textContent = meta.range ? `${meta.range.from} → ${meta.range.to}` : '';
+}
+
+// Apply filters
+function apply(){
+  const chip = document.querySelector('.chip.active').dataset.range;
+  const p = {};
+  const now = new Date();
+  const iso = d => d.toISOString().slice(0,10);
+
+  if(chip==='today'){ p.dateFrom=p.dateTo=iso(now); }
+  else if(chip==='last3'){ p.lastDays=3; }
+  else if(chip==='week'){
+    let day = now.getDay(); if(day===0) day=7;
+    const s = new Date(now); s.setDate(s.getDate() - day + 1);
+    const e = new Date(s); e.setDate(e.getDate()+6);
+    p.dateFrom=iso(s); p.dateTo=iso(e);
   }
-  setTheme(localStorage.getItem('rk_theme') || 'dark');
-  themeToggle.addEventListener('click', () => {
-    setTheme(document.body.classList.contains('light') ? 'dark' : 'light');
-  });
-
-  // ------- UTIL -------
-  const $ = sel => document.querySelector(sel);
-  const fmt = n => Intl.NumberFormat().format(n);
-  const todayISO = () => new Date().toISOString().slice(0,10);
-  function startOfWeek(d){ const x = new Date(d); const day = x.getDay(); const diff = (day===0?6:day-1); x.setDate(x.getDate()-diff); x.setHours(0,0,0,0); return x; } // Mon
-  function endOfWeek(d){ const x = startOfWeek(d); x.setDate(x.getDate()+6); x.setHours(23,59,59,999); return x; }
-  function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
-  function endOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0, 23,59,59,999); }
-
-  // ------- STATE -------
-  let RAW = [];
-  let META = {};
-  const els = {
-    party: $('#party'), yarn: $('#yarn'), mill: $('#mill'),
-    challan: $('#challan'), from: $('#from'), to: $('#to'),
-    tbody: $('#tbody'),
-    total: $('#total'), rows: $('#rows'), rangeTxt: $('#rangeTxt'),
-    groupBy: $('#groupBy')
-  };
-
-  // ------- FETCH -------
-  async function fetchData(params={}){
-    const url = new URL(API_BASE);
-    url.searchParams.set('route','getData');
-    if(params.lastDays) url.searchParams.set('lastDays', params.lastDays);
-    if(params.party) url.searchParams.set('party', params.party);
-    if(params.yarn) url.searchParams.set('yarn', params.yarn);
-    if(params.mill) url.searchParams.set('mill', params.mill);
-    if(params.challan) url.searchParams.set('challan', params.challan);
-    if(params.dateFrom) url.searchParams.set('dateFrom', params.dateFrom);
-    if(params.dateTo) url.searchParams.set('dateTo', params.dateTo);
-
-    els.tbody.innerHTML = `<tr><td class="muted" colspan="6">Loading…</td></tr>`;
-    const res = await fetch(url.toString(), { method:'GET' });
-    const j = await res.json();
-    if(!j.ok) throw new Error(j.error || 'API error');
-    RAW = j.data || [];
-    META = j.meta || {};
-    populateFilters(META);
-    render(RAW);
-    showSummary(RAW, META);
-  }
-
-  function populateFilters(meta){
-    const fill = (sel, list) => {
-      const el = sel; 
-      const val = el.value;
-      el.innerHTML = `<option value="">All</option>` + (list||[]).map(x => `<option>${x}</option>`).join('');
-      if(val) el.value = val; // try preserve
-    };
-    fill(els.party, meta.parties);
-    fill(els.yarn, meta.yarns);
-    fill(els.mill, meta.mills);
-    // Date range defaults
-    if(meta.range){
-      if(!els.from.value && meta.range.from) els.from.value = meta.range.from;
-      if(!els.to.value && meta.range.to) els.to.value = meta.range.to;
-    }
+  else if(chip==='month'){
+    const s = new Date(now.getFullYear(), now.getMonth(),1);
+    const e = new Date(now.getFullYear(), now.getMonth()+1,0);
+    p.dateFrom=iso(s); p.dateTo=iso(e);
   }
 
-  // ------- RENDER -------
-  function render(rows){
-    const gb = els.groupBy.value;
-    if(gb === 'none'){
-      els.tbody.innerHTML = rows.length ? rows.map(r => rowHTML(r)).join('') : `<tr><td class="muted" colspan="6">No data</td></tr>`;
-    } else {
-      // summarize
-      const keyFn = (r)=>{
-        if(gb==='date') return r.date;
-        if(gb==='week'){
-          const d = new Date(r.date);
-          const s = startOfWeek(d);
-          const e = endOfWeek(d);
-          return `Week ${s.toISOString().slice(0,10)} → ${e.toISOString().slice(0,10)}`;
-        }
-        if(gb==='month'){
-          const d = new Date(r.date);
-          return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-        }
-      };
-      const map = new Map();
-      for(const r of rows){
-        const k = keyFn(r);
-        map.set(k, (map.get(k)||0) + Number(r.qty||0));
-      }
-      const arr = Array.from(map.entries()).map(([k,v]) => ({ k, qty:v }));
-      arr.sort((a,b)=> a.k.localeCompare(b.k));
-      els.tbody.innerHTML = arr.length ? arr.map(g => groupRowHTML(g)).join('') : `<tr><td class="muted" colspan="6">No data</td></tr>`;
-    }
-  }
-
-  function rowHTML(r){
-    return `<tr>
-      <td>${r.date}</td>
-      <td>${escapeHtml(r.challan)}</td>
-      <td>${escapeHtml(r.party)}</td>
-      <td>${escapeHtml(r.yarn)}</td>
-      <td class="qty">${fmt(Number(r.qty||0))}</td>
-      <td>${escapeHtml(r.mill)}</td>
-    </tr>`;
-  }
-  function groupRowHTML(g){
-    return `<tr>
-      <td colspan="4"><strong>${g.k}</strong></td>
-      <td class="qty"><strong>${fmt(g.qty)}</strong></td>
-      <td></td>
-    </tr>`;
-  }
-  function showSummary(rows, meta){
-    const total = rows.reduce((a,b)=> a + Number(b.qty||0), 0);
-    els.total.textContent = fmt(total);
-    els.rows.textContent = fmt(rows.length);
-    els.rangeTxt.textContent = meta?.range ? `Range: ${meta.range.from || '—'} → ${meta.range.to || '—'}` : '';
-  }
-
-  // ------- FILTER APPLY -------
-  function applyFilters(){
-    const params = {};
-    const chip = document.querySelector('.chip.active')?.dataset.range;
-
-    // Quick ranges
-    const now = new Date();
-    if(chip === 'today'){
-      params.dateFrom = todayISO();
-      params.dateTo = todayISO();
-    } else if(chip === 'last3'){
-      params.lastDays = 3;
-    } else if(chip === 'week'){
-      params.dateFrom = startOfWeek(now).toISOString().slice(0,10);
-      params.dateTo = endOfWeek(now).toISOString().slice(0,10);
-    } else if(chip === 'month'){
-      params.dateFrom = startOfMonth(now).toISOString().slice(0,10);
-      params.dateTo = endOfMonth(now).toISOString().slice(0,10);
-    } else if(chip === 'all'){
-      // no dates set
-    }
-
-    // Custom date override if user filled
-    if(els.from.value) { params.dateFrom = els.from.value; }
-    if(els.to.value)   { params.dateTo   = els.to.value; }
-
-    // Other filters
-    if(els.party.value)  params.party = els.party.value;
-    if(els.yarn.value)   params.yarn = els.yarn.value;
-    if(els.mill.value)   params.mill = els.mill.value;
-    if(els.challan.value) params.challan = els.challan.value;
-
-    // Persist last selection
-    localStorage.setItem('rk_filters', JSON.stringify({
-      chip, params, groupBy: els.groupBy.value
-    }));
-
-    fetchData(params).catch(err=>{
-      els.tbody.innerHTML = `<tr><td class="muted" colspan="6">Error: ${escapeHtml(err.message)}</td></tr>`;
-    });
-  }
-
-  // ------- EVENTS -------
-  document.getElementById('quick').addEventListener('click', (e)=>{
-    const t = e.target.closest('.chip'); if(!t) return;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    t.classList.add('active');
-    // Clear specific dates when quick chip changes
-    if(['today','last3','week','month','all'].includes(t.dataset.range)){
-      els.from.value = ''; els.to.value = '';
-    }
-    applyFilters();
-  });
-
-  document.getElementById('apply').addEventListener('click', applyFilters);
-  document.getElementById('reset').addEventListener('click', ()=>{
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    document.querySelector('.chip[data-range="last3"]').classList.add('active');
-    els.party.value = ''; els.yarn.value=''; els.mill.value=''; els.challan.value='';
-    els.from.value=''; els.to.value=''; els.groupBy.value='none';
-    localStorage.removeItem('rk_filters');
-    applyFilters();
-  });
-
-  els.groupBy.addEventListener('change', ()=> render(RAW));
-  [els.party, els.yarn, els.mill].forEach(el => el.addEventListener('change', ()=> applyFilters()));
-  els.challan.addEventListener('keydown', (e)=>{ if(e.key==='Enter') applyFilters(); });
-
-  // ------- SECURITY: escape -------
-  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
-
-  // ------- INIT -------
-  (function init(){
-    // restore
-    try{
-      const saved = JSON.parse(localStorage.getItem('rk_filters')||'null');
-      if(saved){
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        if(saved.chip) document.querySelector(`.chip[data-range="${saved.chip}"]`)?.classList.add('active');
-        els.groupBy.value = saved.groupBy || 'none';
-      }
-    }catch{}
-    // default: last 3 days
-    applyFilters();
-  })();
-</script>
-</body>
-</html>
+  if(els.from.value) p.dateFrom = els.from.value;
+  if
