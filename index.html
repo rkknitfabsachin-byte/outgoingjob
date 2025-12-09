@@ -1,132 +1,198 @@
-<!-- Instagram-style mobile-optimized outgoing viewer -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>RK KNIT FAB – Outgoing View</title>
-<meta name="color-scheme" content="dark light">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
   :root{
-    --bg: #0b0f14;
-    --card: rgba(255,255,255,0.06);
-    --text: #e8eef6;
-    --muted: #98a2b3;
-    --ring: rgba(255,255,255,0.25);
-    --glass: rgba(255,255,255,0.08);
-    --shadow: 0 6px 24px rgba(0,0,0,0.35);
-    --accent: #62d0ff;
-    --accent-2: #9b8cff;
-  }
-  .light{
-    --bg: #f6f7fb;
-    --card: rgba(255,255,255,0.85);
-    --text: #0b1220;
-    --muted: #556070;
-    --ring: rgba(0,0,0,0.08);
-    --glass: rgba(255,255,255,0.9);
-    --shadow: 0 6px 20px rgba(0,0,0,0.08);
-    --accent: #0066ff;
-    --accent-2: #8a5cff;
+    --bg:#0b0f14;
+    --card:#14181f;
+    --text:#eef2f8;
+    --muted:#9ca3af;
+    --accent:#4db8ff;
+    --ring:#2a2f38;
   }
 
-  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent }
   body{
-    margin:0; font-family: Inter, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding-bottom: 120px; /* space for mobile */
-  }
-
-  header{
-    position: sticky; top:0; z-index:20;
-    backdrop-filter: blur(12px);
-    background: rgba(0,0,0,0.35);
-    padding: 14px 16px;
-  }
-
-  .title{ display:flex; align-items:center; gap:10px; }
-  .badge{ padding:4px 10px; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); font-size:12px; }
-
-  /* MOBILE-FIRST filters */
-  .filters{
-    margin-top: 12px;
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-    padding-bottom:6px;
-  }
-  .chip{
-    padding:8px 14px; white-space:nowrap;
-    border-radius:999px; background:var(--card);
-    border:1px solid var(--ring);
-  }
-  .chip.active{ outline:2px solid var(--accent) }
-
-  /* Filter Panel */
-  .panel{
-    margin-top:10px;
-    background:var(--glass);
-    padding:12px;
-    border-radius:16px;
-    border:1px solid var(--ring);
-  }
-
-  .panel label{ font-size:12px; color:var(--muted) }
-  .panel input, .panel select{
-    width:100%; padding:10px; margin-top:4px;
-    border-radius:12px; background:var(--card);
-    border:1px solid var(--ring);
+    margin:0;
+    font-family:Inter, sans-serif;
+    background:var(--bg);
     color:var(--text);
   }
 
-  /* TABLE Instagram Style */
-  table{ width:100%; border-collapse:separate; border-spacing:0 8px; }
-  tbody tr{ background:var(--card); border-radius:16px; }
-  tbody td{
-    padding:14px 16px;
-    font-size:17px;
-    border-bottom:none;
+  header{
+    position:sticky;
+    top:0;
+    backdrop-filter:blur(8px);
+    background:rgba(0,0,0,0.35);
+    padding:12px 16px;
+    z-index:20;
   }
-  .qty{ text-align:right; font-weight:600 }
 
-  /* MOBILE OPTIMIZED ROW SPACING (BIG TOUCH TARGETS) */
-  tbody tr{ display:block; margin-bottom:12px; padding:12px 10px; border-radius:16px; }
-  tbody td{ display:flex; justify-content:space-between; padding:6px 4px; }
-  tbody td::before{
-    content: attr(data-label);
+  .title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .badge{
+    padding:4px 10px;
+    border-radius:999px;
+    background:linear-gradient(90deg,#4db8ff,#9b8cff);
     font-size:12px;
-    color:var(--muted);
   }
 
-  /* Desktop Table Revert */
-  @media (min-width: 760px){
-    tbody tr{ display:table-row; padding:0; }
-    tbody td{ display:table-cell; padding:14px 16px; }
-    tbody td::before{ display:none }
+  /* QUICK FILTER CHIPS */
+  .chips{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:10px 0;
   }
 
-  #summary{
-    margin:18px;
-    padding:16px;
-    background:var(--glass);
+  .chip{
+    padding:8px 14px;
+    border-radius:999px;
+    background:var(--card);
+    border:1px solid var(--ring);
+    white-space:nowrap;
+    cursor:pointer;
+  }
+
+  .chip.active{
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+
+  /* FILTER PANEL */
+  .panel{
+    background:var(--card);
+    padding:14px;
     border-radius:16px;
     border:1px solid var(--ring);
   }
 
+  label{
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  select,
+  input{
+    width:100%;
+    padding:10px;
+    background:#1c212b;
+    border:1px solid var(--ring);
+    border-radius:10px;
+    color:var(--text);
+    margin-top:4px;
+  }
+
+  button{
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-size:15px;
+    cursor:pointer;
+  }
+
+  #apply{
+    background:var(--accent);
+    color:#000;
+    width:100%;
+    margin-top:12px;
+  }
+
+  #reset{
+    background:var(--card);
+    color:var(--muted);
+    width:100%;
+    margin-top:8px;
+  }
+
+  /* SUMMARY CARD */
+  #summary{
+    margin:16px;
+    background:var(--card);
+    padding:14px;
+    border-radius:14px;
+    border:1px solid var(--ring);
+  }
+
+  /* TABLE WRAPPER */
+  .table-wrap{
+    overflow-x:auto;
+    padding:0 12px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+  }
+
+  thead th{
+    font-size:13px;
+    color:var(--muted);
+    text-align:left;
+    padding:10px;
+    border-bottom:1px solid var(--ring);
+  }
+
+  tbody td{
+    padding:12px 10px;
+    border-bottom:1px solid #1e242e;
+    font-size:15px;
+  }
+
+  .qty{
+    text-align:right;
+    font-weight:600;
+  }
+
+  /* MOBILE CARD STYLE ROWS */
+  @media(max-width:600px){
+    thead{display:none;}
+    table,tbody,tr,td{
+      display:block;
+      width:100%;
+    }
+    tr{
+      margin-bottom:12px;
+      background:var(--card);
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--ring);
+    }
+    td{
+      border-bottom:none;
+      display:flex;
+      justify-content:space-between;
+      padding:6px;
+    }
+    td::before{
+      content:attr(data-label);
+      color:var(--muted);
+      font-size:12px;
+    }
+  }
 </style>
+
 </head>
+
 <body>
+
 <header>
   <div class="title">
     <div class="badge">Outgoing</div>
-    <h2 style="margin:0">RK KNIT FAB</h2>
-    <button id="themeToggle" style="margin-left:auto; background:var(--card); border:1px solid var(--ring); padding:8px 12px; border-radius:10px;">🌙</button>
+    <h2>RK KNIT FAB</h2>
   </div>
 
-  <div class="filters" id="quick">
+  <div class="chips" id="quick">
     <div class="chip" data-range="today">Today</div>
     <div class="chip active" data-range="last3">Last 3 days</div>
     <div class="chip" data-range="week">This Week</div>
@@ -153,95 +219,208 @@
     <label>Date To</label>
     <input type="date" id="to" />
 
-    <button id="apply" style="margin-top:10px; width:100%; padding:12px; border-radius:12px; background:var(--accent); color:white; border:none;">Apply Filters</button>
-    <button id="reset" style="margin-top:8px; width:100%; padding:12px; border-radius:12px; background:var(--card); border:1px solid var(--ring); color:var(--text);">Reset</button>
+    <button id="apply">Apply Filters</button>
+    <button id="reset">Reset</button>
   </div>
 </header>
 
 <div id="summary">
   <div><strong>Total Qty:</strong> <span id="total">0</span> kg</div>
   <div><strong>Rows:</strong> <span id="rows">0</span></div>
-  <div id="rangeTxt" style="font-size:12px; color:var(--muted); margin-top:6px"></div>
+  <div id="rangeTxt" style="font-size:12px;color:var(--muted);"></div>
 </div>
 
+<div class="table-wrap">
 <table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Challan</th>
+      <th>Party</th>
+      <th>Yarn</th>
+      <th>Qty</th>
+      <th>Mill</th>
+    </tr>
+  </thead>
   <tbody id="tbody">
-    <tr><td data-label="Loading">Loading…</td></tr>
+    <tr><td data-label="Loading" colspan="6">Loading…</td></tr>
   </tbody>
 </table>
-
+</div>
 <script>
+
 const API_BASE = "https://script.google.com/macros/s/AKfycby30Tw10MQlbxrDhguutgGTJPtHzq_-_eveQD0rKwc-Dr2jEktG039_UsQBh1yGy-Co1Q/exec";
 
-const $ = sel => document.querySelector(sel);
+const $ = s => document.querySelector(s);
+
 const els = {
-  party: $('#party'), yarn: $('#yarn'), mill: $('#mill'), challan: $('#challan'), from: $('#from'), to: $('#to'),
-  tbody: $('#tbody'), total: $('#total'), rows: $('#rows'), rangeTxt: $('#rangeTxt')
+  party: $('#party'),
+  yarn: $('#yarn'),
+  mill: $('#mill'),
+  challan: $('#challan'),
+  from: $('#from'),
+  to: $('#to'),
+  tbody: $('#tbody'),
+  total: $('#total'),
+  rows: $('#rows'),
+  rangeTxt: $('#rangeTxt')
 };
 
-async function fetchData(params={}){
+async function fetchData(params = {}) {
   const url = new URL(API_BASE);
-  url.searchParams.set('route','getData');
-  for(const k in params) url.searchParams.set(k, params[k]);
+  url.searchParams.set("route", "getData");
 
-  els.tbody.innerHTML = `<tr><td data-label="Status">Loading…</td></tr>`;
+  Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
+
+  els.tbody.innerHTML = `<tr><td data-label='Loading' colspan='6'>Loading…</td></tr>`;
 
   const res = await fetch(url);
-  const j = await res.json();
-  if(!j.ok){ els.tbody.innerHTML = `<tr><td data-label="Error">${j.error}</td></tr>`; return; }
+  const json = await res.json();
 
-  render(j.data);
-  showSummary(j.data, j.meta);
-  populateFilters(j.meta);
+  if (!json.ok) {
+    els.tbody.innerHTML = `<tr><td colspan='6'>${json.error}</td></tr>`;
+    return;
+  }
+
+  render(json.data);
+  populate(json.meta);
+  summary(json.data, json.meta);
 }
 
-function populateFilters(meta){
-  const fill = (el,list)=>{ el.innerHTML = `<option value="">All</option>` + list.map(x => `<option>${x}</option>`).join(''); };
-  fill(els.party, meta.parties||[]);
-  fill(els.yarn, meta.yarns||[]);
-  fill(els.mill, meta.mills||[]);
+function populate(meta) {
+  const fill = (el, list) => {
+    el.innerHTML = `<option value=''>All</option>` + 
+                   list.map(x => `<option>${x}</option>`).join('');
+  };
+
+  fill(els.party, meta.parties || []);
+  fill(els.yarn, meta.yarns || []);
+  fill(els.mill, meta.mills || []);
 }
 
-function render(rows){
-  if(rows.length===0){ els.tbody.innerHTML = `<tr><td data-label="Status">No data</td></tr>`; return; }
+function render(rows) {
+
+  if (!rows.length) {
+    els.tbody.innerHTML = `<tr><td colspan='6'>No data</td></tr>`;
+    return;
+  }
 
   els.tbody.innerHTML = rows.map(r => `
     <tr>
-      <td data-label="DATE">${r.date}</td>
-      <td data-label="CHALLAN">${r.challan}</td>
-      <td data-label="PARTY">${r.party}</td>
-      <td data-label="YARN">${r.yarn}</td>
-      <td data-label="QTY" class="qty">${Number(r.qty).toLocaleString()}</td>
-      <td data-label="MILL">${r.mill}</td>
-    </tr>`).join('');
+      <td data-label='Date'>${r.date}</td>
+      <td data-label='Challan'>${r.challan}</td>
+      <td data-label='Party'>${r.party}</td>
+      <td data-label='Yarn'>${r.yarn}</td>
+      <td class='qty' data-label='Qty'>${Number(r.qty).toLocaleString()}</td>
+      <td data-label='Mill'>${r.mill}</td>
+    </tr>
+  `).join('');
 }
 
-function showSummary(rows, meta){
-  els.total.textContent = rows.reduce((a,b)=> a+Number(b.qty||0),0).toLocaleString();
+function summary(rows, meta) {
+  els.total.textContent = rows.reduce((a, b) => a + Number(b.qty), 0).toLocaleString();
   els.rows.textContent = rows.length;
-  els.rangeTxt.textContent = meta.range ? `${meta.range.from} → ${meta.range.to}` : '';
+  els.rangeTxt.textContent = `${meta.range.from} → ${meta.range.to}`;
 }
 
-// Apply filters
-function apply(){
+function applyFilters() {
   const chip = document.querySelector('.chip.active').dataset.range;
   const p = {};
+
   const now = new Date();
-  const iso = d => d.toISOString().slice(0,10);
+  const iso = d => d.toISOString().slice(0, 10);
 
-  if(chip==='today'){ p.dateFrom=p.dateTo=iso(now); }
-  else if(chip==='last3'){ p.lastDays=3; }
-  else if(chip==='week'){
-    let day = now.getDay(); if(day===0) day=7;
-    const s = new Date(now); s.setDate(s.getDate() - day + 1);
-    const e = new Date(s); e.setDate(e.getDate()+6);
-    p.dateFrom=iso(s); p.dateTo=iso(e);
-  }
-  else if(chip==='month'){
-    const s = new Date(now.getFullYear(), now.getMonth(),1);
-    const e = new Date(now.getFullYear(), now.getMonth()+1,0);
-    p.dateFrom=iso(s); p.dateTo=iso(e);
+  if (chip === 'today') p.dateFrom = p.dateTo = iso(now);
+
+  else if (chip === 'last3') p.lastDays = 3;
+
+  else if (chip === 'week') {
+    let d = new Date();
+    let day = d.getDay();
+    if (day === 0) day = 7;
+    const s = new Date(d);
+    s.setDate(s.getDate() - day + 1);
+    const e = new Date(s);
+    e.setDate(e.getDate() + 6);
+    p.dateFrom = iso(s);
+    p.dateTo = iso(e);
   }
 
-  if(els.from.value) p.dateFrom = els.from.value;
-  if
+  else if (chip === 'month') {
+    const s = new Date(now.getFullYear(), now.getMonth(), 1);
+    const e = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    p.dateFrom = iso(s);
+    p.dateTo = iso(e);
+  }
+
+  if (els.from.value) p.dateFrom = els.from.value;
+  if (els.to.value) p.dateTo = els.to.value;
+
+  if (els.party.value) p.party = els.party.value;
+  if (els.yarn.value) p.yarn = els.yarn.value;
+  if (els.mill.value) p.mill = els.mill.value;
+  if (els.challan.value) p.challan = els.challan.value;
+
+  fetchData(p);
+}
+
+/* EVENT LISTENERS */
+
+document.getElementById('quick').addEventListener('click', e => {
+  const t = e.target.closest('.chip');
+  if (!t) return;
+
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  t.classList.add('active');
+
+  applyFilters();
+});
+
+document.getElementById('apply').addEventListener('click', applyFilters);
+
+document.getElementById('reset').addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.chip[data-range="last3"]').classList.add('active');
+
+  els.party.value = "";
+  els.yarn.value = "";
+  els.mill.value = "";
+  els.challan.value = "";
+  els.from.value = "";
+  els.to.value = "";
+
+  fetchData({ lastDays: 3 });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  fetchData({ lastDays: 3 });
+});
+
+</script>
+<!-- OPTIONAL: PDF EXPORT BUTTON (UI ONLY — functionality next step) -->
+<div style="padding:18px;">
+  <button id="pdfExport" 
+    style="
+      width:100%;
+      padding:14px;
+      background:var(--accent);
+      color:#000;
+      border:none;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+    ">
+    Export to PDF
+  </button>
+</div>
+
+<script>
+// Hook for PDF button (functionality will be added if you want)
+document.getElementById("pdfExport").addEventListener("click", () => {
+  alert("PDF export coming next — backend setup required.");
+});
+</script>
+
+</body>
+</html>
