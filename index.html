@@ -3,261 +3,278 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RK KNIT FAB – Outgoing View</title>
+<title>RK KNIT FAB – Outgoing Viewer</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#0b0f14;
-    --card:#14181f;
+    --bg:#0c0f16;
+    --card:#151924;
     --text:#eef2f8;
     --muted:#9ca3af;
-    --accent:#4db8ff;
+    --accent:#5bc7ff;
     --ring:#2a2f38;
+    --shadow:0 8px 24px rgba(0,0,0,0.35);
+
+    --fadeIn: fadeIn 0.35s ease;
+    --slideUp: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  @keyframes slideUp { from{transform:translateY(20px); opacity:0;} to{transform:none; opacity:1;} }
 
   body{
     margin:0;
-    font-family:Inter, sans-serif;
+    font-family:Inter;
     background:var(--bg);
     color:var(--text);
-    padding-top:5px; /* FIXES OVERLAP */
+    animation:fadeIn .4s ease;
   }
 
-  /* HEADER / NAV SECTION */
-  header{
-    position:sticky;
-    top:0;
-    backdrop-filter:blur(8px);
-    background:rgba(0,0,0,0.35);
-    padding:12px 16px;
-    z-index:20;
-    margin-bottom:20px; /* SPACE FIX */
-  }
-
-  .title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-
-  .badge{
-    padding:4px 10px;
-    border-radius:999px;
-    background:linear-gradient(90deg,#4db8ff,#9b8cff);
-    font-size:12px;
-  }
-
-  /* QUICK FILTER CHIPS */
-  .chips{
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-    padding:10px 0;
-  }
-
-  .chip{
-    padding:8px 14px;
-    border-radius:999px;
-    background:var(--card);
+  /* Floating Navbar */
+  .navbar{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    max-width:900px;
+    background:rgba(255,255,255,0.05);
     border:1px solid var(--ring);
-    white-space:nowrap;
-    cursor:pointer;
+    border-radius:18px;
+    padding:14px 18px;
+    display:flex;
+    justify-content:space-between;
+    backdrop-filter:blur(12px);
+    box-shadow:var(--shadow);
+    z-index:50;
+    animation:slideUp .5s ease;
   }
 
-  .chip.active{
-    border-color:var(--accent);
-    color:var(--accent);
+  .nav-title{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:0.4px;
   }
 
-  /* FILTER PANEL */
-  .panel{
-    background:var(--card);
-    padding:14px;
-    border-radius:16px;
-    border:1px solid var(--ring);
-  }
-
-  label{
-    font-size:13px;
-    color:var(--muted);
-  }
-
-  select,
-  input{
+  /* Master container */
+  .container{
+    margin-top:120px;
+    padding:20px;
     width:100%;
-    padding:10px;
-    background:#1c212b;
+    max-width:1050px;
+    margin-left:auto;
+    margin-right:auto;
+    animation:fadeIn .6s ease;
+  }
+
+  /* Filter Card */
+  .filter-card{
+    background:var(--card);
     border:1px solid var(--ring);
-    border-radius:10px;
+    padding:20px;
+    border-radius:18px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    animation:slideUp .7s ease;
+  }
+
+  label{color:var(--muted); font-size:13px;}
+
+  select,input{
+    width:100%;
+    padding:12px;
+    background:#1b1f2b;
+    border:1px solid var(--ring);
     color:var(--text);
-    margin-top:4px;
+    border-radius:12px;
+    margin-top:5px;
+    transition:0.25s ease;
+  }
+  select:focus,input:focus{
+    border-color:var(--accent);
+    transform:scale(1.02);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:16px;
+    margin-top:15px;
   }
 
   button{
-    padding:12px;
+    padding:14px;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     font-size:15px;
     cursor:pointer;
+    transition:0.25s ease;
   }
 
-  #apply{
+  .apply{
     background:var(--accent);
     color:#000;
-    width:100%;
-    margin-top:12px;
-  }
-
-  #reset{
-    background:var(--card);
-    color:var(--muted);
-    width:100%;
-    margin-top:8px;
-  }
-
-  /* SUMMARY CARD */
-  #summary{
-    margin:16px;
-    background:var(--card);
-    padding:14px;
-    border-radius:14px;
-    border:1px solid var(--ring);
-  }
-
-  /* TABLE WRAPPER */
-  .table-wrap{
-    overflow-x:auto;
-    padding:0 12px;
-    margin-top:25px; /* ENSURE NOT UNDER HEADER */
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-  }
-
-  thead th{
-    font-size:13px;
-    color:var(--muted);
-    text-align:left;
-    padding:10px;
-    border-bottom:1px solid var(--ring);
-  }
-
-  tbody td{
-    padding:12px 10px;
-    border-bottom:1px solid #1e242e;
-    font-size:15px;
-  }
-
-  .qty{
-    text-align:right;
     font-weight:600;
   }
+  .apply:hover{transform:translateY(-2px);}
 
-  /* MOBILE CARD MODE */
-  @media(max-width:600px){
-    thead{display:none;}
+  .reset{
+    background:var(--card);
+    border:1px solid var(--ring);
+    color:var(--muted);
+  }
+
+  /* Summary */
+  .summary{
+    background:var(--card);
+    border:1px solid var(--ring);
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:20px;
+    animation:slideUp .8s ease;
+  }
+
+  /* Table area */
+  .table-wrap{
+    overflow-x:auto;
+    background:var(--card);
+    padding:12px;
+    border-radius:18px;
+    border:1px solid var(--ring);
+    box-shadow:var(--shadow);
+    animation:slideUp .9s ease;
+  }
+
+  table{width:100%; border-collapse:collapse;}
+  th{
+    padding:10px;
+    color:var(--muted);
+    font-size:13px;
+    text-align:left;
+    border-bottom:1px solid var(--ring);
+  }
+  td{
+    padding:12px 10px;
+    border-bottom:1px solid #1e242e;
+  }
+  .qty{text-align:right; font-weight:700;}
+
+  /* Mobile responsive rows */
+  @media(max-width:650px){
+    th{display:none;}
     table,tbody,tr,td{display:block;width:100%;}
     tr{
-      margin-bottom:12px;
-      background:var(--card);
-      padding:10px;
-      border-radius:12px;
+      background:#131722;
       border:1px solid var(--ring);
+      padding:14px;
+      margin:12px 0;
+      border-radius:14px;
     }
     td{
-      border-bottom:none;
+      border:none;
       display:flex;
       justify-content:space-between;
-      padding:6px;
+      padding:7px;
     }
     td::before{
       content:attr(data-label);
-      color:var(--muted);
       font-size:12px;
+      color:var(--muted);
     }
   }
-</style>
 
+  /* PDF Button */
+  .pdf-btn{
+    width:100%;
+    background:var(--accent);
+    color:#000;
+    border:none;
+    border-radius:12px;
+    padding:16px;
+    font-size:16px;
+    font-weight:600;
+    margin-top:25px;
+    cursor:pointer;
+    transition:0.25s ease;
+  }
+  .pdf-btn:hover{transform:translateY(-2px);}
+
+</style>
 </head>
 
 <body>
 
-<header>
-  <div class="title">
-    <div class="badge">Outgoing</div>
-    <h2>RK KNIT FAB</h2>
-  </div>
-
-  <div class="chips" id="quick">
-    <div class="chip" data-range="today">Today</div>
-    <div class="chip active" data-range="last3">Last 3 days</div>
-    <div class="chip" data-range="week">This Week</div>
-    <div class="chip" data-range="month">This Month</div>
-    <div class="chip" data-range="all">All</div>
-  </div>
-
-  <div class="panel">
-    <label>Party</label>
-    <select id="party"><option value="">All</option></select>
-
-    <label>Yarn</label>
-    <select id="yarn"><option value="">All</option></select>
-
-    <label>Mill</label>
-    <select id="mill"><option value="">All</option></select>
-
-    <label>Challan</label>
-    <input id="challan" placeholder="Enter challan no…" />
-
-    <label>Date From</label>
-    <input type="date" id="from" />
-
-    <label>Date To</label>
-    <input type="date" id="to" />
-
-    <button id="apply">Apply Filters</button>
-    <button id="reset">Reset</button>
-  </div>
-</header>
-
-<div id="summary">
-  <div><strong>Total Qty:</strong> <span id="total">0</span> kg</div>
-  <div><strong>Rows:</strong> <span id="rows">0</span></div>
-  <div id="rangeTxt" style="font-size:12px;color:var(--muted);"></div>
+<!-- Floating Navbar -->
+<div class="navbar">
+  <div class="nav-title">RK KNIT FAB – Outgoing</div>
 </div>
 
-<div class="table-wrap">
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Challan</th>
-      <th>Party</th>
-      <th>Yarn</th>
-      <th>Qty</th>
-      <th>Mill</th>
-    </tr>
-  </thead>
-  <tbody id="tbody">
-    <tr><td data-label="Loading" colspan="6">Loading…</td></tr>
-  </tbody>
-</table>
+<div class="container">
+
+  <!-- Filter Section -->
+  <div class="filter-card">
+    <h3 style="margin:0 0 10px 0;">Filters</h3>
+
+    <div class="grid">
+      <div><label>Party</label><select id="party"><option value="">All</option></select></div>
+      <div><label>Yarn</label><select id="yarn"><option value="">All</option></select></div>
+      <div><label>Mill</label><select id="mill"><option value="">All</option></select></div>
+      <div><label>Challan</label><input id="challallan" placeholder="Enter challan no…"></div>
+      <div><label>Date From</label><input id="from" type="date"></div>
+      <div><label>Date To</label><input id="to" type="date"></div>
+    </div>
+
+    <div style="display:flex; gap:16px; margin-top:20px;">
+      <button class="apply" id="apply">Apply Filters</button>
+      <button class="reset" id="reset">Reset</button>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <strong>Total Qty:</strong> <span id="total">0</span> kg<br>
+    <strong>Rows:</strong> <span id="rows">0</span><br>
+    <span id="rangeTxt" style="font-size:12px;color:var(--muted);"></span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Challan</th>
+          <th>Party</th>
+          <th>Yarn</th>
+          <th>Qty</th>
+          <th>Mill</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td data-label="Loading" colspan="6">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PDF Export Button -->
+  <button class="pdf-btn" id="pdfExport">Export to PDF</button>
+
 </div>
+
+
+<!-- FULL JAVASCRIPT -->
 <script>
+
 const API_BASE = "https://script.google.com/macros/s/AKfycby30Tw10MQlbxrDhguutgGTJPtHzq_-_eveQD0rKwc-Dr2jEktG039_UsQBh1yGy-Co1Q/exec";
 
 const $ = s => document.querySelector(s);
-
 const els = {
   party: $('#party'),
   yarn: $('#yarn'),
   mill: $('#mill'),
-  challan: $('#challan'),
+  challan: $('#challallan'),
   from: $('#from'),
   to: $('#to'),
   tbody: $('#tbody'),
@@ -266,251 +283,113 @@ const els = {
   rangeTxt: $('#rangeTxt')
 };
 
-
-/*****************************************************
- * FETCH FILTERED DATA (JSON API)
- *****************************************************/
-async function fetchData(params = {}) {
+/* Fetch Data */
+async function fetchData(params={}) {
 
   const url = new URL(API_BASE);
-  url.searchParams.set("route", "getData");
+  url.searchParams.set("route","getData");
+  Object.keys(params).forEach(k=> url.searchParams.set(k, params[k]));
 
-  Object.keys(params).forEach(k => {
-    if (params[k] !== "") url.searchParams.set(k, params[k]);
-  });
+  els.tbody.innerHTML = `<tr><td colspan="6">Loading…</td></tr>`;
 
-  els.tbody.innerHTML = `<tr><td data-label="Loading" colspan="6">Loading…</td></tr>`;
+  const res = await fetch(url);
+  const j = await res.json();
 
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-
-    if (!json.ok) {
-      els.tbody.innerHTML = `<tr><td colspan="6">${json.error}</td></tr>`;
-      return;
-    }
-
-    render(json.data);
-    summary(json.data, json.meta);
-    populate(json.meta);
-
-  } catch (err) {
-    els.tbody.innerHTML = `<tr><td colspan="6">Error loading</td></tr>`;
-  }
-}
-
-
-
-/*****************************************************
- * POPULATE FILTER DROPDOWNS
- *****************************************************/
-function populate(meta) {
-  const fill = (el, list) => {
-    el.innerHTML = `<option value="">All</option>` +
-      list.map(v => `<option>${v}</option>`).join('');
-  };
-
-  fill(els.party, meta.parties || []);
-  fill(els.yarn, meta.yarns || []);
-  fill(els.mill, meta.mills || []);
-}
-
-
-
-/*****************************************************
- * RENDER TABLE (Responsive)
- *****************************************************/
-function render(rows) {
-  if (!rows.length) {
-    els.tbody.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
+  if(!j.ok){
+    els.tbody.innerHTML = `<tr><td colspan="6">${j.error}</td></tr>`;
     return;
   }
 
-  els.tbody.innerHTML = rows.map(r => `
+  render(j.data);
+  populate(j.meta);
+  summary(j.data,j.meta);
+}
+
+/* Populate dropdowns */
+function populate(meta){
+  const fill = (el,list)=>{
+    el.innerHTML = `<option value="">All</option>` + list.map(x=>`<option>${x}</option>`).join('')
+  };
+  fill(els.party, meta.parties);
+  fill(els.yarn, meta.yarns);
+  fill(els.mill, meta.mills);
+}
+
+/* Render table */
+function render(rows){
+  if(!rows.length){
+    els.tbody.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
+    return;
+  }
+  els.tbody.innerHTML = rows.map(r=>`
     <tr>
       <td data-label="Date">${r.date}</td>
       <td data-label="Challan">${r.challan}</td>
       <td data-label="Party">${r.party}</td>
       <td data-label="Yarn">${r.yarn}</td>
-      <td class="qty" data-label="Qty">${Number(r.qty).toLocaleString()}</td>
+      <td data-label="Qty" class="qty">${Number(r.qty).toLocaleString()}</td>
       <td data-label="Mill">${r.mill}</td>
     </tr>
   `).join('');
 }
 
-
-
-/*****************************************************
- * SUMMARY SECTION
- *****************************************************/
-function summary(rows, meta) {
-  const qty = rows.reduce((a, b) => a + Number(b.qty || 0), 0);
-
-  els.total.textContent = qty.toLocaleString();
+/* Summary */
+function summary(rows,meta){
+  els.total.textContent = rows.reduce((a,b)=>a+Number(b.qty),0).toLocaleString();
   els.rows.textContent = rows.length;
   els.rangeTxt.textContent = `${meta.range.from} → ${meta.range.to}`;
 }
 
+/* Apply Filters */
+function applyFilters(){
 
+  const p={};
+  const now=new Date();
+  const iso=d=>d.toISOString().slice(0,10);
 
-/*****************************************************
- * APPLY FILTERS
- *****************************************************/
-function applyFilters() {
-
-  const chip = document.querySelector('.chip.active').dataset.range;
-
-  const p = {};
-  const now = new Date();
-  const iso = d => d.toISOString().slice(0, 10);
-
-  /* QUICK RANGES */
-  if (chip === "today") {
-    p.dateFrom = p.dateTo = iso(now);
-  }
-
-  if (chip === "last3") p.lastDays = 3;
-
-  if (chip === "week") {
-    let d = new Date();
-    let day = d.getDay();
-    if (day === 0) day = 7;
-    const s = new Date(d);
-    s.setDate(s.getDate() - day + 1);
-    const e = new Date(s);
-    e.setDate(e.getDate() + 6);
-    p.dateFrom = iso(s);
-    p.dateTo = iso(e);
-  }
-
-  if (chip === "month") {
-    const s = new Date(now.getFullYear(), now.getMonth(), 1);
-    const e = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    p.dateFrom = iso(s);
-    p.dateTo = iso(e);
-  }
-
-  /* CUSTOM DATE OVERRIDE */
-  if (els.from.value) p.dateFrom = els.from.value;
-  if (els.to.value) p.dateTo = els.to.value;
-
-  /* OTHER FILTERS */
-  if (els.party.value) p.party = els.party.value;
-  if (els.yarn.value) p.yarn = els.yarn.value;
-  if (els.mill.value) p.mill = els.mill.value;
-  if (els.challan.value) p.challan = els.challan.value;
+  if(els.from.value) p.dateFrom = els.from.value;
+  if(els.to.value) p.dateTo = els.to.value;
+  if(els.party.value) p.party = els.party.value;
+  if(els.yarn.value) p.yarn = els.yarn.value;
+  if(els.mill.value) p.mill = els.mill.value;
+  if(els.challan.value) p.challan = els.challan.value;
 
   fetchData(p);
 }
 
-
-
-/*****************************************************
- * EVENTS
- *****************************************************/
-document.getElementById("quick").addEventListener("click", e => {
-  const t = e.target.closest(".chip");
-  if (!t) return;
-
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-  t.classList.add("active");
-
-  applyFilters();
-});
-
+/* Events */
 document.getElementById("apply").addEventListener("click", applyFilters);
 
-document.getElementById("reset").addEventListener("click", () => {
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-  document.querySelector('.chip[data-range="last3"]').classList.add("active");
-
+document.getElementById("reset").addEventListener("click", ()=>{
   els.party.value = "";
   els.yarn.value = "";
   els.mill.value = "";
   els.challan.value = "";
   els.from.value = "";
   els.to.value = "";
-
-  fetchData({ lastDays: 3 });
+  fetchData({ lastDays:3 });
 });
 
+/* PDF Export */
+document.getElementById("pdfExport").addEventListener("click", ()=>{
+  const params = new URLSearchParams();
 
-/*****************************************************
- * LOAD DEFAULT (last 3 days)
- *****************************************************/
-window.addEventListener("DOMContentLoaded", () => {
-  fetchData({ lastDays: 3 });
+  if(els.party.value) params.set("party", els.party.value);
+  if(els.yarn.value) params.set("yarn", els.yarn.value);
+  if(els.mill.value) params.set("mill", els.mill.value);
+  if(els.challan.value) params.set("challan", els.challan.value);
+  if(els.from.value) params.set("dateFrom", els.from.value);
+  if(els.to.value) params.set("dateTo", els.to.value);
+
+  const url = API_BASE + "?route=exportPDF&" + params.toString();
+  window.open(url,"_blank");
 });
-</script>
-<!-- PDF Export Button -->
-<div style="padding:18px;">
-  <button id="pdfExport"
-    style="
-      width:100%;
-      padding:14px;
-      background:var(--accent);
-      color:#000;
-      border:none;
-      border-radius:12px;
-      font-size:16px;
-      font-weight:600;
-      cursor:pointer;
-    ">
-    Export to PDF
-  </button>
-</div>
 
-<script>
-document.getElementById("pdfExport").addEventListener("click", () => {
-
-  const chip = document.querySelector('.chip.active').dataset.range;
-
-  let params = new URLSearchParams();
-
-  // push filter values into URL
-  if (els.party.value) params.set("party", els.party.value);
-  if (els.yarn.value) params.set("yarn", els.yarn.value);
-  if (els.mill.value) params.set("mill", els.mill.value);
-  if (els.challan.value) params.set("challan", els.challan.value);
-
-  if (els.from.value) params.set("dateFrom", els.from.value);
-  if (els.to.value) params.set("dateTo", els.to.value);
-
-  // quick filters
-  if (chip === "last3") params.set("lastDays", 3);
-
-  if (chip === "today") {
-    let t = new Date().toISOString().slice(0,10);
-    params.set("dateFrom", t);
-    params.set("dateTo", t);
-  }
-
-  if (chip === "week") {
-    let now = new Date(); 
-    let day = now.getDay();
-    if (day === 0) day = 7;
-    const s = new Date(now);
-    s.setDate(s.getDate() - day + 1);
-    const e = new Date(s);
-    e.setDate(e.getDate() + 6);
-    params.set("dateFrom", s.toISOString().slice(0,10));
-    params.set("dateTo", e.toISOString().slice(0,10));
-  }
-
-  if (chip === "month") {
-    let now = new Date();
-    const s = new Date(now.getFullYear(), now.getMonth(), 1);
-    const e = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    params.set("dateFrom", s.toISOString().slice(0,10));
-    params.set("dateTo", e.toISOString().slice(0,10));
-  }
-
-  // Generate export URL
-  const pdfURL = API_BASE + "?route=exportPDF&" + params.toString();
-
-  // Open PDF
-  window.open(pdfURL, "_blank");
+/* Initial Load */
+window.addEventListener("DOMContentLoaded",()=>{
+  fetchData({ lastDays:3 });
 });
 </script>
+
 </body>
 </html>
