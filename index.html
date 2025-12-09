@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RK KNIT FAB – Outgoing Viewer</title>
+<title>RK KNIT FAB – Outgoing Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -16,23 +16,28 @@
     --accent:#5bc7ff;
     --ring:#2a2f38;
     --shadow:0 8px 24px rgba(0,0,0,0.35);
-
-    --fadeIn: fadeIn 0.35s ease;
-    --slideUp: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-  @keyframes slideUp { from{transform:translateY(20px); opacity:0;} to{transform:none; opacity:1;} }
+  /* LIGHT THEME */
+  .light{
+    --bg:#f7f8fc;
+    --card:#ffffff;
+    --text:#111520;
+    --muted:#6d7380;
+    --accent:#007bff;
+    --ring:#e3e6eb;
+    --shadow:0 4px 14px rgba(0,0,0,0.08);
+  }
 
   body{
     margin:0;
     font-family:Inter;
     background:var(--bg);
     color:var(--text);
-    animation:fadeIn .4s ease;
+    transition:0.3s ease;
   }
 
-  /* Floating Navbar */
+  /* Navbar */
   .navbar{
     position:fixed;
     top:20px;
@@ -40,36 +45,42 @@
     transform:translateX(-50%);
     width:90%;
     max-width:900px;
-    background:rgba(255,255,255,0.05);
+    background:var(--card);
     border:1px solid var(--ring);
     border-radius:18px;
     padding:14px 18px;
     display:flex;
     justify-content:space-between;
-    backdrop-filter:blur(12px);
+    align-items:center;
+    backdrop-filter:blur(14px);
     box-shadow:var(--shadow);
     z-index:50;
-    animation:slideUp .5s ease;
   }
 
   .nav-title{
     font-size:20px;
     font-weight:700;
-    letter-spacing:0.4px;
   }
 
-  /* Master container */
+  /* Theme Switch */
+  .theme-toggle{
+    padding:10px 14px;
+    border-radius:14px;
+    border:1px solid var(--ring);
+    background:var(--card);
+    cursor:pointer;
+    font-size:14px;
+    transition:0.3s ease;
+  }
+
   .container{
     margin-top:120px;
     padding:20px;
-    width:100%;
     max-width:1050px;
-    margin-left:auto;
-    margin-right:auto;
-    animation:fadeIn .6s ease;
+    margin:auto;
   }
 
-  /* Filter Card */
+  /* Filter Section */
   .filter-card{
     background:var(--card);
     border:1px solid var(--ring);
@@ -77,24 +88,24 @@
     border-radius:18px;
     margin-bottom:20px;
     box-shadow:var(--shadow);
-    animation:slideUp .7s ease;
   }
 
-  label{color:var(--muted); font-size:13px;}
+  label{color:var(--muted);font-size:14px;}
 
   select,input{
     width:100%;
     padding:12px;
+    border-radius:12px;
     background:#1b1f2b;
     border:1px solid var(--ring);
     color:var(--text);
-    border-radius:12px;
     margin-top:5px;
     transition:0.25s ease;
   }
-  select:focus,input:focus{
-    border-color:var(--accent);
-    transform:scale(1.02);
+  .light select,.light input{
+    background:#f1f1f5;
+    border:1px solid #d0d2d8;
+    color:#111520;
   }
 
   .grid{
@@ -104,130 +115,131 @@
     margin-top:15px;
   }
 
-  button{
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    font-size:15px;
-    cursor:pointer;
-    transition:0.25s ease;
-  }
-
   .apply{
     background:var(--accent);
-    color:#000;
+    padding:14px;
+    border-radius:12px;
+    border:none;
     font-weight:600;
+    color:#000;
+    cursor:pointer;
+    width:140px;
   }
-  .apply:hover{transform:translateY(-2px);}
-
   .reset{
+    width:140px;
     background:var(--card);
     border:1px solid var(--ring);
+    padding:14px;
+    border-radius:12px;
     color:var(--muted);
+    cursor:pointer;
   }
 
-  /* Summary */
+  /* Summary Box */
   .summary{
     background:var(--card);
     border:1px solid var(--ring);
-    border-radius:18px;
     padding:16px;
+    border-radius:18px;
     margin-bottom:20px;
-    animation:slideUp .8s ease;
   }
 
-  /* Table area */
+  /* Table */
   .table-wrap{
-    overflow-x:auto;
     background:var(--card);
     padding:12px;
     border-radius:18px;
     border:1px solid var(--ring);
     box-shadow:var(--shadow);
-    animation:slideUp .9s ease;
+    overflow-x:auto;
   }
 
-  table{width:100%; border-collapse:collapse;}
+  table{width:100%;border-collapse:collapse;}
   th{
     padding:10px;
     color:var(--muted);
     font-size:13px;
-    text-align:left;
     border-bottom:1px solid var(--ring);
   }
   td{
     padding:12px 10px;
     border-bottom:1px solid #1e242e;
   }
-  .qty{text-align:right; font-weight:700;}
+  .qty{text-align:right;font-weight:700;}
 
-  /* Mobile responsive rows */
+  /* Loader Shimmer */
+  .loader{
+    height:14px;
+    width:100%;
+    background:linear-gradient(90deg,#2a2f38 0%,#3a3f48 50%,#2a2f38 100%);
+    background-size:200% 100%;
+    animation:shimmer 1.3s infinite linear;
+    border-radius:6px;
+  }
+  @keyframes shimmer{
+    from{background-position:-200% 0;}
+    to{background-position:200% 0;}
+  }
+
+  .loader-row{
+    background:var(--card);
+    border:1px solid var(--ring);
+    border-radius:14px;
+    padding:12px;
+    margin:12px 0;
+  }
+
+  /* Mobile Card View */
   @media(max-width:650px){
     th{display:none;}
     table,tbody,tr,td{display:block;width:100%;}
-    tr{
-      background:#131722;
-      border:1px solid var(--ring);
-      padding:14px;
-      margin:12px 0;
-      border-radius:14px;
-    }
-    td{
-      border:none;
-      display:flex;
-      justify-content:space-between;
-      padding:7px;
-    }
-    td::before{
-      content:attr(data-label);
-      font-size:12px;
-      color:var(--muted);
-    }
+    tr{background:#131722;border:1px solid var(--ring);padding:14px;margin:12px 0;border-radius:14px;}
+    .light tr{background:#ffffff;}
+    td{border:none;display:flex;justify-content:space-between;padding:7px;}
+    td::before{content:attr(data-label);font-size:12px;color:var(--muted);}
   }
 
   /* PDF Button */
   .pdf-btn{
+    margin-top:30px;
     width:100%;
     background:var(--accent);
     color:#000;
-    border:none;
-    border-radius:12px;
     padding:16px;
+    border-radius:14px;
+    border:none;
     font-size:16px;
     font-weight:600;
-    margin-top:25px;
     cursor:pointer;
-    transition:0.25s ease;
   }
-  .pdf-btn:hover{transform:translateY(-2px);}
-
 </style>
 </head>
 
 <body>
 
-<!-- Floating Navbar -->
+<!-- NAVBAR -->
 <div class="navbar">
   <div class="nav-title">RK KNIT FAB – Outgoing</div>
+  <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
 </div>
 
 <div class="container">
 
-  <!-- Filter Section -->
+  <!-- Filters -->
   <div class="filter-card">
-    <h3 style="margin:0 0 10px 0;">Filters</h3>
+    <h3>Filters</h3>
 
     <div class="grid">
-      <div><label>Party</label><select id="party"><option value="">All</option></select></div>
-      <div><label>Yarn</label><select id="yarn"><option value="">All</option></select></div>
-      <div><label>Mill</label><select id="mill"><option value="">All</option></select></div>
-      <div><label>Challan</label><input id="challallan" placeholder="Enter challan no…"></div>
+      <div><label>Party</label><select id="party"></select></div>
+      <div><label>Yarn</label><select id="yarn"></select></div>
+      <div><label>Mill</label><select id="mill"></select></div>
+      <div><label>Challan</label><input id="challan" placeholder="Number"></div>
       <div><label>Date From</label><input id="from" type="date"></div>
       <div><label>Date To</label><input id="to" type="date"></div>
     </div>
 
-    <div style="display:flex; gap:16px; margin-top:20px;">
-      <button class="apply" id="apply">Apply Filters</button>
+    <div style="display:flex; gap:16px; margin-top:18px;">
+      <button class="apply" id="apply">Apply</button>
       <button class="reset" id="reset">Reset</button>
     </div>
   </div>
@@ -244,37 +256,26 @@
     <table>
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Challan</th>
-          <th>Party</th>
-          <th>Yarn</th>
-          <th>Qty</th>
-          <th>Mill</th>
+          <th>Date</th><th>Challan</th><th>Party</th><th>Yarn</th><th>Qty</th><th>Mill</th>
         </tr>
       </thead>
-      <tbody id="tbody">
-        <tr><td data-label="Loading" colspan="6">Loading…</td></tr>
-      </tbody>
+      <tbody id="tbody"></tbody>
     </table>
   </div>
 
-  <!-- PDF Export Button -->
   <button class="pdf-btn" id="pdfExport">Export to PDF</button>
 
 </div>
 
-
-<!-- FULL JAVASCRIPT -->
 <script>
-
 const API_BASE = "https://script.google.com/macros/s/AKfycby30Tw10MQlbxrDhguutgGTJPtHzq_-_eveQD0rKwc-Dr2jEktG039_UsQBh1yGy-Co1Q/exec";
 
-const $ = s => document.querySelector(s);
+const $ = x => document.querySelector(x);
 const els = {
   party: $('#party'),
   yarn: $('#yarn'),
   mill: $('#mill'),
-  challan: $('#challallan'),
+  challan: $('#challan'),
   from: $('#from'),
   to: $('#to'),
   tbody: $('#tbody'),
@@ -283,47 +284,50 @@ const els = {
   rangeTxt: $('#rangeTxt')
 };
 
-/* Fetch Data */
-async function fetchData(params={}) {
+/* Format date -> dd-mm-yyyy */
+function fmt(d){
+  const x=new Date(d);
+  return `${String(x.getDate()).padStart(2,'0')}-${String(x.getMonth()+1).padStart(2,'0')}-${x.getFullYear()}`;
+}
 
-  const url = new URL(API_BASE);
+function showLoader(){
+  els.tbody.innerHTML = `
+    <tr class="loader-row"><td colspan="6"><div class="loader"></div></td></tr>
+    <tr class="loader-row"><td colspan="6"><div class="loader"></div></td></tr>
+    <tr class="loader-row"><td colspan="6"><div class="loader"></div></td></tr>
+  `;
+}
+
+async function fetchData(p={}) {
+  showLoader();
+
+  const url=new URL(API_BASE);
   url.searchParams.set("route","getData");
-  Object.keys(params).forEach(k=> url.searchParams.set(k, params[k]));
+  Object.keys(p).forEach(k=>url.searchParams.set(k,p[k]));
 
-  els.tbody.innerHTML = `<tr><td colspan="6">Loading…</td></tr>`;
+  const r=await fetch(url);
+  const j=await r.json();
 
-  const res = await fetch(url);
-  const j = await res.json();
+  if(!j.ok){ els.tbody.innerHTML = `<tr><td colspan="6">${j.error}</td></tr>`; return; }
 
-  if(!j.ok){
-    els.tbody.innerHTML = `<tr><td colspan="6">${j.error}</td></tr>`;
-    return;
-  }
-
-  render(j.data);
   populate(j.meta);
+  render(j.data);
   summary(j.data,j.meta);
 }
 
-/* Populate dropdowns */
 function populate(meta){
-  const fill = (el,list)=>{
-    el.innerHTML = `<option value="">All</option>` + list.map(x=>`<option>${x}</option>`).join('')
-  };
-  fill(els.party, meta.parties);
-  fill(els.yarn, meta.yarns);
-  fill(els.mill, meta.mills);
+  const fill=(el,arr)=>{ el.innerHTML=`<option value="">All</option>`+arr.map(v=>`<option>${v}</option>`).join(''); }
+  fill(els.party,meta.parties);
+  fill(els.yarn,meta.yarns);
+  fill(els.mill,meta.mills);
 }
 
-/* Render table */
 function render(rows){
-  if(!rows.length){
-    els.tbody.innerHTML = `<tr><td colspan="6">No data</td></tr>`;
-    return;
-  }
+  if(!rows.length){ els.tbody.innerHTML = `<tr><td colspan="6">No data</td></tr>`; return; }
+
   els.tbody.innerHTML = rows.map(r=>`
     <tr>
-      <td data-label="Date">${r.date}</td>
+      <td data-label="Date">${fmt(r.date)}</td>
       <td data-label="Challan">${r.challan}</td>
       <td data-label="Party">${r.party}</td>
       <td data-label="Yarn">${r.yarn}</td>
@@ -333,62 +337,51 @@ function render(rows){
   `).join('');
 }
 
-/* Summary */
 function summary(rows,meta){
   els.total.textContent = rows.reduce((a,b)=>a+Number(b.qty),0).toLocaleString();
   els.rows.textContent = rows.length;
-  els.rangeTxt.textContent = `${meta.range.from} → ${meta.range.to}`;
+  els.rangeTxt.textContent = `${fmt(meta.range.from)} → ${fmt(meta.range.to)}`;
 }
 
-/* Apply Filters */
-function applyFilters(){
-
+function apply(){
   const p={};
-  const now=new Date();
-  const iso=d=>d.toISOString().slice(0,10);
-
-  if(els.from.value) p.dateFrom = els.from.value;
-  if(els.to.value) p.dateTo = els.to.value;
   if(els.party.value) p.party = els.party.value;
   if(els.yarn.value) p.yarn = els.yarn.value;
   if(els.mill.value) p.mill = els.mill.value;
   if(els.challan.value) p.challan = els.challan.value;
-
+  if(els.from.value) p.dateFrom = els.from.value;
+  if(els.to.value) p.dateTo = els.to.value;
   fetchData(p);
 }
 
-/* Events */
-document.getElementById("apply").addEventListener("click", applyFilters);
-
-document.getElementById("reset").addEventListener("click", ()=>{
-  els.party.value = "";
-  els.yarn.value = "";
-  els.mill.value = "";
-  els.challan.value = "";
-  els.from.value = "";
-  els.to.value = "";
-  fetchData({ lastDays:3 });
-});
+$("#apply").onclick = apply;
+$("#reset").onclick = ()=>{
+  els.party.value=""; els.yarn.value=""; els.mill.value="";
+  els.challan.value=""; els.from.value=""; els.to.value="";
+  fetchData({lastDays:3});
+};
 
 /* PDF Export */
-document.getElementById("pdfExport").addEventListener("click", ()=>{
-  const params = new URLSearchParams();
+$("#pdfExport").onclick = ()=>{
+  const p=new URLSearchParams();
+  if(els.party.value) p.set("party",els.party.value);
+  if(els.yarn.value) p.set("yarn",els.yarn.value);
+  if(els.mill.value) p.set("mill",els.mill.value);
+  if(els.challan.value) p.set("challan",els.challan.value);
+  if(els.from.value) p.set("dateFrom",els.from.value);
+  if(els.to.value) p.set("dateTo",els.to.value);
 
-  if(els.party.value) params.set("party", els.party.value);
-  if(els.yarn.value) params.set("yarn", els.yarn.value);
-  if(els.mill.value) params.set("mill", els.mill.value);
-  if(els.challan.value) params.set("challan", els.challan.value);
-  if(els.from.value) params.set("dateFrom", els.from.value);
-  if(els.to.value) params.set("dateTo", els.to.value);
+  window.open(API_BASE+"?route=exportPDF&"+p.toString(),"_blank");
+};
 
-  const url = API_BASE + "?route=exportPDF&" + params.toString();
-  window.open(url,"_blank");
-});
+/* THEME TOGGLE */
+$("#themeBtn").onclick = ()=>{
+  document.body.classList.toggle("light");
+  $("#themeBtn").textContent = document.body.classList.contains("light") ? "🌞 Light" : "🌙 Dark";
+};
 
-/* Initial Load */
-window.addEventListener("DOMContentLoaded",()=>{
-  fetchData({ lastDays:3 });
-});
+/* Initial load */
+fetchData({lastDays:3});
 </script>
 
 </body>
